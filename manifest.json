@@ -1,0 +1,73 @@
+{
+  "manifest_version": 3,
+  "name": "Chess Analyzer",
+  "version": "1.0.1",
+  "description": "Анализ шахматных досок на Chess.com и Lichess.org с помощью локального Stockfish.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "chess-analyzer@local",
+      "strict_min_version": "115.0"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "Chess Analyzer",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png"
+    }
+  },
+  "background": {
+    "page": "src/engine/host.html"
+  },
+  "permissions": ["storage", "tabs", "activeTab"],
+  "host_permissions": [
+    "*://*.chess.com/*",
+    "*://chess.com/*",
+    "*://*.lichess.org/*",
+    "*://lichess.org/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.chess.com/*",
+        "*://chess.com/*",
+        "*://*.lichess.org/*",
+        "*://lichess.org/*"
+      ],
+      "js": [
+        "src/lib/fen.js",
+        "src/lib/board.js",
+        "src/lib/overlay.js",
+        "src/lib/engine.js",
+        "src/content/panel.js",
+        "src/content/content.js"
+      ],
+      "css": ["src/content/styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "engine/stockfish.js",
+        "engine/stockfish-nnue-16-single.wasm",
+        "src/page/bridge.js"
+      ],
+      "matches": [
+        "*://*.chess.com/*",
+        "*://chess.com/*",
+        "*://*.lichess.org/*",
+        "*://lichess.org/*"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}
